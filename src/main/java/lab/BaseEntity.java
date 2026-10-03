@@ -18,4 +18,6 @@ public abstract class BaseEntity implements GameEntity {
         this.position = position;
     }
 
+
+
 }

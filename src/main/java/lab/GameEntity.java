@@ -9,4 +9,5 @@ public interface GameEntity {
     void draw(GraphicsContext gc);
     void simulate(double delay);
     Rectangle2D getBoundingBox();
+    void collision();
 }
