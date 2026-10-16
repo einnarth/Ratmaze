@@ -3,6 +3,7 @@ package lab;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,6 +12,7 @@ public class Level {
 
 	private final double width;
 	private final double height;
+    private int score = 0;
 
     private final List<GameEntity> entities;
     private final Rat player;
@@ -51,6 +53,9 @@ public class Level {
         for (GameEntity entity : entities) {
             entity.draw(gc);
         }
+        gc.setFill(Color.BLACK);
+        gc.setFont(new Font("Arial", 24));
+        gc.fillText("Score: " + score, width - 120, 40);
 	}
 
 	public void simulate(double delay) {
@@ -63,6 +68,7 @@ public class Level {
                     if (entity instanceof Cheese) {
                         Cheese cheese = (Cheese) entity;
                         cheese.collision();
+                        score++;
                     }
                     else if (entity instanceof Wall) {
                         player.collision();

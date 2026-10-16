@@ -7,30 +7,18 @@ import javafx.scene.image.Image;
 
 import java.util.Random;
 
-public class Rat extends BaseEntity {
+public class Rat extends ImageEntity {
     private Point2D speed;
     private static final Random RANDOM = new Random();
-    private final Image image;
 
     public Rat(Point2D position, Point2D speed) {
-        super(position);
+        super(position, "rat.png");
         this.speed = speed;
-        this.image = new Image(getClass().getResourceAsStream("rat.png"));
-    }
-
-    @Override
-    public void draw(GraphicsContext gc) {
-        gc.drawImage(image, position.getX(), position.getY());
     }
 
     @Override
     public void simulate(double delay) {
         position = position.add(speed.multiply(delay));
-    }
-
-    @Override
-    public Rectangle2D getBoundingBox() {
-        return new Rectangle2D(position.getX(), position.getY(), image.getWidth(), image.getHeight());
     }
 
     @Override
