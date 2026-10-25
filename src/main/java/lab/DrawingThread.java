@@ -12,13 +12,7 @@ public class DrawingThread extends AnimationTimer {
     private final GraphicsContext gc;
 
     private Level level;
-    private double x = 0;
-    private double y = 50;
-    private double speedX = 150;
-    private double speedY = 0;
     private long lastFrame = 0;
-    private boolean lastFrameXDirectionChanged = false;
-    private boolean lastFrameYDirectionChanged = false;
 
 
     public DrawingThread(Canvas canvas) {
@@ -35,29 +29,7 @@ public class DrawingThread extends AnimationTimer {
         double delta = lastFrame == 0 ? 0 : (now - lastFrame) / 1_000_000_000D;
         lastFrame = now;
         level.draw(gc);
-        drawFps(delta);
         level.simulate(delta);
     }
 
-    private void drawFps(double delta) {
-        int fps = calcFps(delta);
-        gc.setFont(new Font("Arial", 30));
-        gc.setFill(Color.BLACK);
-        gc.fillText(String.format("FPS: %04d", fps), 10, canvas.getHeight() - 10);
-    }
-
-    private double fpsSum = 0;
-    private double fpsCount = 0;
-    private int avergeFps = 0;
-
-    private int calcFps(double delta) {
-        fpsSum += 1 / delta;
-        fpsCount += 1;
-        if (fpsCount >= 100) {
-            avergeFps = (int) (fpsSum / fpsCount);
-            fpsSum = 0;
-            fpsCount = 0;
-        }
-        return avergeFps;
-    }
 }

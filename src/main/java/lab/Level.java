@@ -53,12 +53,24 @@ public class Level {
         for (GameEntity entity : entities) {
             entity.draw(gc);
         }
-        gc.setFill(Color.BLACK);
-        gc.setFont(new Font("Arial", 24));
-        gc.fillText("Score: " + score, width - 120, 40);
 	}
 
 	public void simulate(double delay) {
+        player.savePosition();
+        double speed = 150 * delay;
+
+        if (lab.App.activeKeys.contains(javafx.scene.input.KeyCode.W)) {
+            player.moveY(-speed);
+        }
+        if (lab.App.activeKeys.contains(javafx.scene.input.KeyCode.S)) {
+            player.moveY(speed);
+        }
+        if (lab.App.activeKeys.contains(javafx.scene.input.KeyCode.A)) {
+            player.moveX(-speed);
+        }
+        if (lab.App.activeKeys.contains(javafx.scene.input.KeyCode.D)) {
+            player.moveX(speed);
+        }
         for (GameEntity entity : entities) {
             entity.simulate(delay);
         }
@@ -69,6 +81,7 @@ public class Level {
                         Cheese cheese = (Cheese) entity;
                         cheese.collision();
                         score++;
+                        lab.controllers.GameController.updateScore(score);
                     }
                     else if (entity instanceof Wall) {
                         player.collision();

@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class Rat extends ImageEntity {
     private Point2D speed;
+    private Point2D oldPosition;
     private static final Random RANDOM = new Random();
 
     public Rat(Point2D position, Point2D speed) {
@@ -18,16 +19,24 @@ public class Rat extends ImageEntity {
 
     @Override
     public void simulate(double delay) {
-        position = position.add(speed.multiply(delay));
     }
 
     @Override
     public void collision() {
-        double rx = RANDOM.nextDouble(-100, 100);
-        double ry = RANDOM.nextDouble(-100, 100);
-        speed = new Point2D(-speed.getX() + rx, -speed.getY() + ry);
+        if (oldPosition != null) {
+            this.position = oldPosition;
+        }
+    }
+    public void moveX(double dx) {
+        this.position = this.position.add(dx, 0);
+    }
 
-        this.position = this.position.add(speed.multiply(0.05));
+    public void moveY(double dy) {
+        this.position = this.position.add(0, dy);
+    }
+
+    public void savePosition() {
+        this.oldPosition = this.position;
     }
 }
 
