@@ -15,10 +15,10 @@ public class DrawingThread extends AnimationTimer {
     private long lastFrame = 0;
 
 
-    public DrawingThread(Canvas canvas) {
+    public DrawingThread(Canvas canvas, Level level) {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
-        this.level = new Level(canvas.getWidth(), canvas.getHeight());
+        this.level = level;
     }
 
     /**

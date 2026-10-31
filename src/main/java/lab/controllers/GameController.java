@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import lab.DrawingThread;
+import lab.Level;
 
 public class GameController {
 
@@ -14,7 +15,6 @@ public class GameController {
     private Canvas canvas;
 
     private static GameController instance;
-    private DrawingThread timer;
 
     public GameController() {
         instance = this;
@@ -23,7 +23,9 @@ public class GameController {
     @FXML
     public void initialize() {
         if (canvas != null) {
-            timer = new DrawingThread(canvas);
+            Level level = new Level(canvas.getWidth(), canvas.getHeight());
+            level.setScoreListener(GameController::updateScore);
+            DrawingThread timer = new DrawingThread(canvas, level);
             timer.start();
         }
     }

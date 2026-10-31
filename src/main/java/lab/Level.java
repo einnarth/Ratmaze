@@ -14,35 +14,37 @@ public class Level {
 	private final double height;
     private int score = 0;
 
-    private final List<GameEntity> entities;
+    private final List<GameEntity> entities = new ArrayList<>();
     private final Rat player;
-    private final Cheese[] cheeses;
+
     private static final double WALL_SIZE = 15;
     private static final Random RANDOM = new Random();
+
+    private ScoreListener scoreListener;
 
 	public Level(double width, double height) {
 		this.width = width;
 		this.height = height;
-        this.entities = new ArrayList<>();
 
         player = new Rat(new Point2D(50, 50), new Point2D(150, 100));
         entities.add(player);
+
         Wall topWall = new Wall(new Point2D(0, 0), width, WALL_SIZE);
         Wall bottomWall = new Wall(new Point2D(0, height - WALL_SIZE), width, WALL_SIZE);
         Wall leftWall = new Wall(new Point2D(0, 0), WALL_SIZE, height);
         Wall rightWall = new Wall(new Point2D(width - WALL_SIZE, 0), WALL_SIZE, height);
+
         entities.add(topWall);
         entities.add(bottomWall);
         entities.add(leftWall);
         entities.add(rightWall);
-        cheeses = new Cheese[5];
-        for (int i = 0; i < cheeses.length; i++) {
+
+        for (int i = 0; i < 5; i++) {
             Point2D randomPos = new Point2D(
                 RANDOM.nextDouble(WALL_SIZE, width - WALL_SIZE - 20),
                 RANDOM.nextDouble(WALL_SIZE, height - WALL_SIZE - 20)
             );
-            cheeses[i] = new Cheese(randomPos);
-            entities.add(cheeses[i]);
+            entities.add(new Cheese(randomPos));
         }
 	}
 
@@ -77,11 +79,13 @@ public class Level {
         for (GameEntity entity : entities) {
             if (entity != player) {
                 if (player.getBoundingBox().intersects(entity.getBoundingBox())) {
-                    if (entity instanceof Cheese) {
-                        Cheese cheese = (Cheese) entity;
+                    if (entity instanceof Cheese cheese) {
                         cheese.collision();
                         score++;
-                        lab.controllers.GameController.updateScore(score);
+
+                        if (scoreListener != null) {
+                            scoreListener.onScoreChange(score);
+                        }
                     }
                     else if (entity instanceof Wall) {
                         player.collision();
@@ -90,6 +94,9 @@ public class Level {
                 }
             }
         }
+    }
+    public void setScoreListener(ScoreListener scoreListener) {
+        this.scoreListener = scoreListener;
     }
 }
 
