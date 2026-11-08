@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -21,10 +22,43 @@ public class Level {
     private static final Random RANDOM = new Random();
 
     private ScoreListener scoreListener;
+    private final Comparator<GameEntity> comparator;
 
 	public Level(double width, double height) {
 		this.width = width;
 		this.height = height;
+
+        comparator = new Comparator<GameEntity>() {
+            @Override
+            public int compare(GameEntity o1, GameEntity o2) {
+                if (o1 == o2){
+                    return 0;
+                }
+                boolean o1IsWall = o1 instanceof Wall;
+                boolean o2IsWall = o2 instanceof Wall;
+                if (o1IsWall && !o2IsWall){
+                    return -1;
+                }
+                if (!o1IsWall && o2IsWall){
+                    return 1;
+                }
+
+                boolean o1IsCheese = o1 instanceof Cheese;
+                boolean o2IsCheese = o2 instanceof Cheese;
+                if (o1IsCheese && !o2IsCheese) return -1;
+                if (!o1IsCheese && o2IsCheese) return 1;
+
+                boolean o1IsRat = o1 instanceof Rat;
+                boolean o2IsRat = o2 instanceof Rat;
+                if (o1IsRat && !o2IsRat){
+                    return 1;
+                }
+                if (!o1IsRat && o2IsRat){
+                    return -1;
+                }
+                return 0;
+            }
+        };
 
         player = new Rat(new Point2D(50, 50), new Point2D(150, 100));
         entities.add(player);
@@ -46,6 +80,7 @@ public class Level {
             );
             entities.add(new Cheese(randomPos));
         }
+        entities.sort(comparator);
 	}
 
 	public void draw(GraphicsContext gc) {
@@ -94,6 +129,7 @@ public class Level {
                 }
             }
         }
+        entities.sort(comparator);
     }
     public void setScoreListener(ScoreListener scoreListener) {
         this.scoreListener = scoreListener;
